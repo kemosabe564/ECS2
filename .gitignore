@@ -1,5 +1,3 @@
-# first ignore all files
-*
 
 # then do not ignore the followings
 !*.m
