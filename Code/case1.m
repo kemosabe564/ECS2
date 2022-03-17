@@ -37,4 +37,14 @@ LKAS_CS.Q = [0 0 10^20 0];
 
 %% Simulation
 
+Reference = 0.02;
+CONTROLLER_TYPE = 1;
+PATTERN={1};
+SIMULATION_TIME=10; %in seconds
+pipelining=0;
 
+if pipelining==0
+    simulateDIC(CONTROLLER_TYPE, LKAS.h, LKAS.tau, LKAS_CS.Phi_aug, LKAS_CS.Gamma_aug, LKAS_CS.C_aug, LKAS_CS.K, LKAS_CS.F, PATTERN, SIMULATION_TIME, Reference, LKAS.fh);
+else
+    simulatePipelinedDIC(h,tauSystemScenarios,phi,Gamma,C_aug,K,F,SIMULATION_TIME,Reference,CONTROLLER_TYPE);
+end
