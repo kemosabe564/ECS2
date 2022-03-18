@@ -8,7 +8,7 @@ clear variables;
 clear all;
 format short;
 
-% close all;
+close all;
 
 
 %% configuration & time analysis
@@ -16,11 +16,45 @@ format short;
 % frame rate 100 frames per second, fh/s
 LKAS.fh = 1/100;
 LKAS.n_ROI = 8;
-LKAS.n_pipeline = 1;
-LKAS.n_parallelization = 1;
+LKAS.contorller_type = 1;
+
+Case_index = 3;
+
+switch Case_index
+    case 1
+        disp('Case 1:');
+        LKAS.n_pipeline = 1;
+        LKAS.n_parallelization = 1;
+    
+    case 2
+        disp('Case 2:')
+        LKAS.n_pipeline = 1;
+        LKAS.n_parallelization = 1;
+    
+    case 3
+        disp('Case 3:')
+        LKAS.n_pipeline = 8;
+        LKAS.n_parallelization = 1;
+    
+    case 4
+        disp('Case 4:')
+        LKAS.n_pipeline = 1;
+        LKAS.n_parallelization = 1;
+    
+    case 5
+        disp('Case 5:')
+        LKAS.n_pipeline = 1;
+        LKAS.n_parallelization = 1;
+        
+    otherwise
+        disp('invalid index, set as default case 1')
+        LKAS.n_pipeline = 1;
+        LKAS.n_parallelization = 1;
+end
+
 
 % time analysis 
-LKAS = config(LKAS);
+LKAS = timeAnalysis(LKAS);
 fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 
 
@@ -31,23 +65,24 @@ fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
 
 LKAS_CS.R = 10;
-temp = [0 1 2 1 0];
-LKAS_CS.Q = 1*(temp') * temp;
-1*(temp') * temp
-
+temp = [0 1 10 1 0 0 0 0 0];
+LKAS_CS.Q = 100*(temp') * temp;
+clear temp
 [LKAS_CS.K, LKAS_CS.F, LKAS_CS.K_T, LKAS_CS.T] = discreteTimeController(LKAS.tau, LKAS.h, LKAS_CS.Q, LKAS_CS.R, LKAS_CS);
 
 
 %% Simulation
 
-Reference = 0.02;
-CONTROLLER_TYPE = 1;
+Reference = 0;
 PATTERN = {1};
-SIMULATION_TIME = 15; %in seconds
-pipelining = 0;
+% simulation in seconds
+Simulation_time = 15; 
+Initial_value = 0.20;
 
-if pipelining == 0
-    simulateDIC(CONTROLLER_TYPE, LKAS.h, LKAS.tau, LKAS_CS.Phi_aug, LKAS_CS.Gamma_aug, LKAS_CS.C_aug, LKAS_CS.K, LKAS_CS.F, PATTERN, SIMULATION_TIME, Reference, LKAS.fh);
+if LKAS.n_pipeline <= 1
+    simulateDIC(Initial_value, LKAS.contorller_type, LKAS.h, LKAS.tau, LKAS_CS.Phi_aug, LKAS_CS.Gamma_aug, LKAS_CS.C_aug, LKAS_CS.K, LKAS_CS.F, PATTERN, Simulation_time, Reference, LKAS.fh);
 else
-    simulatePipelinedDIC(h,tauSystemScenarios,phi,Gamma,C_aug,K,F,SIMULATION_TIME,Reference,CONTROLLER_TYPE);
+    simulatePipelinedDIC(Initial_value, LKAS.contorller_type, LKAS.h, LKAS.tau, LKAS_CS.Phi_aug, LKAS_CS.Gamma_aug, LKAS_CS.C_aug, LKAS_CS.K, LKAS_CS.F, Simulation_time, Reference)
 end
+
+clear PATTERN

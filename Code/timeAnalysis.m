@@ -1,4 +1,4 @@
-function LKAS = config(LKAS)
+function LKAS = timeAnalysis(LKAS)
     % execution time for each task
     Time.t_A = 0.5;
     Time.t_C = 0.016;

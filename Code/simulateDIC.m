@@ -1,4 +1,4 @@
-function simulateDIC(CONTROLLER_TYPE,h,tauSystemScenarios,phi,Gamma,C_aug,K,F,PATTERN,SIMULATION_TIME,Reference,fh)
+function simulateDIC(Initial_value, CONTROLLER_TYPE, h, tauSystemScenarios, phi, Gamma, C_aug, K, F, PATTERN, SIMULATION_TIME, Reference, fh)
 
 %% LOAD THE SYSTEM MODEL
 [A,~,~,~,~]=systemModel();
@@ -18,6 +18,8 @@ for loop=1:num_plots
           timeU(1) = 0;
           j=1; %to keep track of the length(timing_pattern[])
           x0 = zeros(length(A),1);  %initialise for the state matrix A
+          x0(3) = Initial_value;
+%           x0
           z0 = [x0; 0]; %augmented state matrix; due to implementation-aware matrices additional zeros are not needed
           e(1) = C_aug{1}*z0- Reference(1);
         end

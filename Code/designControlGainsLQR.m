@@ -1,7 +1,4 @@
-function [K, F, cqlf_Ai] = designControlGains(Ad, Bd, Cd, Q, R, LKAS_CS)
-
-%     Q = (Cd')*Cd;
-%     R = 1000;
+function [K, F, cqlf_Ai] = designControlGainsLQR(Ad, Bd, Cd, Q, R)
 
     n=length(Ad);
     %Design using dare
@@ -11,8 +8,5 @@ function [K, F, cqlf_Ai] = designControlGains(Ad, Bd, Cd, Q, R, LKAS_CS)
     F = 1 / (Cd * inv(eye(n) - (Ad + Bd * K_controlled)) * Bd);
     K = K_controlled;   
     cqlf_Ai= Ad + (Bd * K);
-    
-
-
 end    
     

@@ -1,4 +1,4 @@
-function simulatePipelinedDIC(h,tauSystemScenarios,phi,Gamma,C_aug,K,F,SIMULATION_TIME,reference,CONTROLLER_TYPE)
+function simulatePipelinedDIC(Initial_value, CONTROLLER_TYPE, h, tauSystemScenarios, phi, Gamma, C_aug, K, F, SIMULATION_TIME, reference)
 
 %% LOAD THE SYSTEM MODEL
 [A,~,~,~]=systemModel();
@@ -12,8 +12,7 @@ z0 = zeros(length(cell2mat(phi)),1);  %initialise for the state matrix A
 x(1) = cell2mat(C_aug)*z0;
 time(1) = 0;
 e(1) = cell2mat(C_aug)*z0;
-input(1)=0
- 
+z0(3) = Initial_value; 
 
 for i=1:nSimulationSteps
        
