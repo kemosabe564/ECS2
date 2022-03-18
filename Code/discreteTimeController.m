@@ -32,30 +32,54 @@ function [K, F, K_T, T] = discreteTimeController(tau, h, Q, R, LKAS_CS)
 %     [Phi_aug, Gamma_aug, C_aug] = augmentSystem(tau,h); %an example function structure
 %     %% END: WRITE CODE TO AUGMENT YOUR SYSTEM DEPENDING ON THE CONTROLLER YOU WANT TO USE.
     %% check for controllability
-    i = 1;
-    Phi_aug = cell2mat(LKAS_CS.Phi_aug);
-    Gamma_aug = cell2mat(LKAS_CS.Gamma_aug);
-    C_aug = cell2mat(LKAS_CS.C_aug);
-    controllability = ctrb(Phi_aug, Gamma_aug);
-    det(controllability);
     
-    if det(controllability) == 0
-        disp('System is Uncontrollable; needs decomposition.');
-        [phi_ctr, Gamma_ctr, C_ctr, T, k] = ctrbf(Phi_aug, Gamma_aug, C_aug);
-        phi_controlled = phi_ctr(2:end, 2:end);
-        Gamma_controlled = Gamma_ctr(2:end);
-        C_controlled = C_ctr(2:end);
-        %% Design control gains
-        % An example for LQR is given below.
-        [K_T, F] = designControlGainsLQR(phi_controlled, Gamma_controlled, C_controlled, Q, R); %an example function structure
-        
-        %% Augmenting uncontrollable states
+    Phi_aug = (LKAS_CS.Phi_aug);
+    Gamma_aug = (LKAS_CS.Gamma_aug);
+    C_aug = (LKAS_CS.C_aug);
+    for i=1:size(Phi_aug, 2)
+        controllability = ctrb(Phi_aug{i}, Gamma_aug{i});
+        det(controllability); 
+        if det(controllability) == 0
+            disp('System is Uncontrollable; needs decomposition.');
+            [phi_ctr, Gamma_ctr, C_ctr, T, k] = ctrbf(Phi_aug{i}, Gamma_aug{i}, C_aug{i});
+            phi_controlled = phi_ctr(2:end, 2:end);
+            Gamma_controlled = Gamma_ctr(2:end);
+            C_controlled = C_ctr(2:end)
+            
+            % Design control gains
+            % Using LQR
+%             Q = (C_controlled') * C_controlled;
+            [K_T{i}, F{i}] = designControlGainsLQR(phi_controlled, Gamma_controlled, C_controlled, Q, R); %an example function structure
 
-        K_T = [0 K_T];
-
-        K = K_T*T;
-    else
-        disp('System is Controllable.');
-        [K, F] = designControlGainsLQR(Phi_aug, Gamma_aug, C_aug, Q, R);
+            % Augmenting uncontrollable states
+            K_T{i} = [0 K_T{i}];
+            K{i} = K_T{i} * T;
+            
+        else
+            disp('System is Controllable.');
+%             Q = (C_aug{i}') * C_aug{i};
+            [K{i}, F{i}] = designControlGainsLQR(Phi_aug{i}, Gamma_aug{i}, C_aug{i}, Q, R);
+        end
     end
+    
+    
+%     if det(controllability) == 0
+%         disp('System is Uncontrollable; needs decomposition.');
+%         [phi_ctr, Gamma_ctr, C_ctr, T, k] = ctrbf(Phi_aug, Gamma_aug, C_aug);
+%         phi_controlled = phi_ctr(2:end, 2:end);
+%         Gamma_controlled = Gamma_ctr(2:end);
+%         C_controlled = C_ctr(2:end);
+%         %% Design control gains
+%         % An example for LQR is given below.
+%         [K_T, F] = designControlGainsLQR(phi_controlled, Gamma_controlled, C_controlled, Q, R); %an example function structure
+%         
+%         %% Augmenting uncontrollable states
+% 
+%         K_T = [0 K_T];
+% 
+%         K = K_T*T;
+%     else
+%         disp('System is Controllable.');
+%         [K, F] = designControlGainsLQR(Phi_aug, Gamma_aug, C_aug, Q, R);
+%     end
 end

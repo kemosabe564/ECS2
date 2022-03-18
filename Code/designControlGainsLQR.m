@@ -1,14 +1,18 @@
-function [K,F] = designControlGains(Ad, Bd, Cd, Q, R, LKAS_CS)
-    
-    n = length(Ad);
-    Q = 10*(Cd')*Cd;
-    R = 100;
-    
+function [K, F, cqlf_Ai] = designControlGains(Ad, Bd, Cd, Q, R, LKAS_CS)
+
+%     Q = (Cd')*Cd;
+%     R = 1000;
+
+    n=length(Ad);
     %Design using dare
-    [X, L, G] = dare(Ad, Bd, Q,R);
+    [~, ~, G] = dare(Ad, Bd, Q, R);
     K_controlled = -G;
     
-    F{i} = 1 / (Cd * inv(eye(n) - (Ad{i} + Bd{i} * K_controlled)) * Bd);
-    K{i} = K_controlled;   
+    F = 1 / (Cd * inv(eye(n) - (Ad + Bd * K_controlled)) * Bd);
+    K = K_controlled;   
+    cqlf_Ai= Ad + (Bd * K);
+    
+
+
 end    
     
