@@ -5,9 +5,10 @@
 
 clc;
 clear variables;
-% close all;
 clear all;
 format short;
+
+% close all;
 
 
 %% configuration & time analysis
@@ -30,8 +31,9 @@ fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
 
 LKAS_CS.R = 10;
-temp = [0 0 0 1 0];
+temp = [0 1 2 1 0];
 LKAS_CS.Q = 1*(temp') * temp;
+1*(temp') * temp
 
 [LKAS_CS.K, LKAS_CS.F, LKAS_CS.K_T, LKAS_CS.T] = discreteTimeController(LKAS.tau, LKAS.h, LKAS_CS.Q, LKAS_CS.R, LKAS_CS);
 
@@ -41,7 +43,7 @@ LKAS_CS.Q = 1*(temp') * temp;
 Reference = 0.02;
 CONTROLLER_TYPE = 1;
 PATTERN = {1};
-SIMULATION_TIME = 30; %in seconds
+SIMULATION_TIME = 15; %in seconds
 pipelining = 0;
 
 if pipelining == 0

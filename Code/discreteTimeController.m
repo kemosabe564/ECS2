@@ -45,7 +45,7 @@ function [K, F, K_T, T] = discreteTimeController(tau, h, Q, R, LKAS_CS)
             phi_controlled = phi_ctr(2:end, 2:end);
             Gamma_controlled = Gamma_ctr(2:end);
             C_controlled = C_ctr(2:end)
-            
+            C_controlled'*C_controlled
             % Design control gains
             % Using LQR
 %             Q = (C_controlled') * C_controlled;
