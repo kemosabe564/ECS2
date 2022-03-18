@@ -4,7 +4,6 @@
 %%%%%
 
 clc;
-clear variables;
 clear all;
 format short;
 
