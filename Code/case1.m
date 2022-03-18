@@ -18,7 +18,7 @@ LKAS.fh = 1/100;
 LKAS.n_ROI = 8;
 LKAS.contorller_type = 1;
 
-Case_index = 3;
+Case_index = 2;
 
 switch Case_index
     case 1
@@ -29,7 +29,7 @@ switch Case_index
     case 2
         disp('Case 2:')
         LKAS.n_pipeline = 1;
-        LKAS.n_parallelization = 1;
+        LKAS.n_parallelization = 4;
     
     case 3
         disp('Case 3:')
@@ -38,7 +38,7 @@ switch Case_index
     
     case 4
         disp('Case 4:')
-        LKAS.n_pipeline = 1;
+        LKAS.n_pipeline = 4;
         LKAS.n_parallelization = 1;
     
     case 5
@@ -65,8 +65,9 @@ fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
 
 LKAS_CS.R = 10;
-temp = [0 1 10 1 0 0 0 0 0];
-LKAS_CS.Q = 100*(temp') * temp;
+% temp = [0 1 10 1 0 0 0 0 0];
+temp = [1 1 1 0.01 0];
+LKAS_CS.Q = 1*(temp') * temp;
 clear temp
 [LKAS_CS.K, LKAS_CS.F, LKAS_CS.K_T, LKAS_CS.T] = discreteTimeController(LKAS.tau, LKAS.h, LKAS_CS.Q, LKAS_CS.R, LKAS_CS);
 
@@ -76,7 +77,7 @@ clear temp
 Reference = 0;
 PATTERN = {1};
 % simulation in seconds
-Simulation_time = 15; 
+Simulation_time = 10; 
 Initial_value = 0.20;
 
 if LKAS.n_pipeline <= 1
