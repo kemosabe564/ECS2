@@ -1,6 +1,6 @@
 function [K, F, cqlf_Ai] = designControlGainsLQR(Ad, Bd, Cd, Q, R)
 
-    n=length(Ad);
+    n = length(Ad);
     %Design using dare
     [~, ~, G] = dare(Ad, Bd, Q, R);
     K_controlled = -G;

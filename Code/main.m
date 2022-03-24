@@ -18,7 +18,7 @@ LKAS.n_ROI = 8;
 LKAS.contorller_type = 1;
 
 % case selection
-Case_index = 4;
+Case_index = 1;
 
 % plot setting 
 PATTERN = {1};
@@ -26,7 +26,7 @@ PATTERN = {1};
 Reference = 0;
 % simulation in seconds
 Simulation_time = 10; 
-Initial_value = 0.20;
+Initial_value = -1;
 
 switch Case_index
     case 1
@@ -73,10 +73,10 @@ fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 % agumentation
 LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
 
-LKAS_CS.R = 10;
+LKAS_CS.R = 1;
 
 temp = [0.76 0.22 0.61 0.015 0 0 0 0 ];
-% temp = [1 1 1 0.01 0];
+temp = [1 1 1 0.01 0];
 
 
 LKAS_CS.Q = 1*(temp') * temp;

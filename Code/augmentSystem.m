@@ -5,13 +5,9 @@ function LKAS_CS = augmentSystem(tau, h, n_pipeline, LKAS_CS)
         for i=1:length(tau)
             sysc = ss(LKAS_CS.A, LKAS_CS.B, LKAS_CS.C, LKAS_CS.D, 'InputDelay', tau);
             sysd = c2d(sysc, h);
-
             % absorbDelay is the key function to augment        
             sysd_aug = absorbDelay(sysd);
-
-%             Phi_aug{i} = sysd_aug.a;
-%             Gamma_aug{i} = sysd_aug.b;
-%             C_aug{i} = sysd_aug.c;
+            
             Phi_aug{i} = sysd_aug.a;
             Gamma_aug{i} = sysd_aug.b;
             C_aug{i} = sysd_aug.c;
