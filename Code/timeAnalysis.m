@@ -15,4 +15,6 @@ function LKAS = timeAnalysis(LKAS)
     LKAS.time = Time;
     
     LKAS.h = LKAS.fh * ceil(LKAS.tau / LKAS.fh / LKAS.n_pipeline);
+    fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
+    LKAS.tau = LKAS.h * LKAS.n_pipeline;
 end

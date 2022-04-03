@@ -45,11 +45,11 @@ function [K, F, K_T, T] = discreteTimeController(tau, h, Q, R, LKAS_CS)
             phi_controlled = phi_ctr(2:end, 2:end);
             Gamma_controlled = Gamma_ctr(2:end);
             C_controlled = C_ctr(2:end);
-            Q_temp = C_controlled'*C_controlled;
+            Q_temp = 1*C_controlled'*C_controlled
             
             % Design control gains
             % Using LQR
-            [K_T{i}, F{i}] = designControlGainsLQR(phi_controlled, Gamma_controlled, C_controlled, Q, R); %an example function structure
+            [K_T{i}, F{i}] = designControlGainsLQR(phi_controlled, Gamma_controlled, C_controlled, Q_temp, R); %an example function structure
 
             % Augmenting uncontrollable states
             K_T{i} = [0 K_T{i}];

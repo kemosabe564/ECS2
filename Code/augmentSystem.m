@@ -15,6 +15,7 @@ function LKAS_CS = augmentSystem(tau, h, n_pipeline, LKAS_CS)
     else
     % pipelined style
         for i=1:length(tau)
+            disp("pipe")
             nf = max(1, ceil(tau/h));
             nf_wc = max(nf);
             

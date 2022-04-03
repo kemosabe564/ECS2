@@ -18,7 +18,7 @@ LKAS.n_ROI = 8;
 LKAS.contorller_type = 1;
 
 % case selection
-Case_index = 1;
+Case_index = 5;
 
 % plot setting 
 PATTERN = {1};
@@ -26,7 +26,7 @@ PATTERN = {1};
 Reference = 0;
 % simulation in seconds
 Simulation_time = 10; 
-Initial_value = -1;
+Initial_value = 0.15;
 
 switch Case_index
     case 1
@@ -37,7 +37,7 @@ switch Case_index
     case 2
         disp('Case 2:')
         LKAS.n_pipeline = 1;
-        LKAS.n_parallelization = 4;
+        LKAS.n_parallelization = 5;
     
     case 3
         disp('Case 3:')
@@ -46,13 +46,13 @@ switch Case_index
     
     case 4
         disp('Case 4:')
-        LKAS.n_pipeline = 4;
+        LKAS.n_pipeline = 2;
         LKAS.n_parallelization = 1;
     
     case 5
         disp('Case 5:')
-        LKAS.n_pipeline = 1;
-        LKAS.n_parallelization = 1;
+        LKAS.n_pipeline = 2;
+        LKAS.n_parallelization = 2;
         PATTERN={'s_1'};
         
     otherwise
@@ -71,12 +71,15 @@ fprintf('System time analysis: tau=%.3f, h=%.3f\n',LKAS.tau, LKAS.h);
 [LKAS_CS.A, LKAS_CS.B, LKAS_CS.C, LKAS_CS.D, LKAS_CS.nx] = systemModel();
 
 % agumentation
-LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
-
+if (LKAS.n_pipeline <= 1)
+    LKAS_CS = augmentSystem(LKAS.h, LKAS.h, LKAS.n_pipeline, LKAS_CS);
+else
+    LKAS_CS = augmentSystem(LKAS.tau, LKAS.h, LKAS.n_pipeline, LKAS_CS);
+end
 LKAS_CS.R = 1;
 
 temp = [0.76 0.22 0.61 0.015 0 0 0 0 ];
-temp = [1 1 1 0.01 0];
+temp = [0 0.23 0.23 0 0];
 
 
 LKAS_CS.Q = 1*(temp') * temp;
@@ -93,3 +96,6 @@ else
 end
 
 clear PATTERN
+
+
+
